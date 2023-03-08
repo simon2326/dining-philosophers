@@ -7,7 +7,6 @@
 #define LEFT ((i + 1) % PHIL)
 
 sem_t forks[PHIL]; // Forks
-sem_t state;
 
 void *dining_philosopher(void *args)
 {
@@ -15,28 +14,22 @@ void *dining_philosopher(void *args)
 
     while (1)
     {
-        sem_wait(&state);
         printf("Philosopher [%d] thinks...\n", i);
-        sem_post(&state);
         sleep(3);
 
-        sem_wait(&state);
         printf("Philosopher [%d] is hungry...\n", i);
-        sem_post(&state);
         sleep(3);
 
         sem_wait(&forks[RIGHT]);
         sem_wait(&forks[LEFT]);
 
-        sem_wait(&state);
         printf("Philosopher [%d] took forks {%d, %d}\n", i, RIGHT, LEFT);
         printf("Philosopher [%d] is eating...\n", i);
-        sem_post(&state);
+        sleep(2);
+        printf("Philosopher [%d] left forks {%d, %d}\n", i, RIGHT, LEFT);
 
         sem_post(&forks[RIGHT]);
         sem_post(&forks[LEFT]);
-
-        printf("Philosopher [%d] left forks {%d, %d}\n", i, RIGHT, LEFT);
     }
 }
 
@@ -45,7 +38,6 @@ int main(int argc, char *argv[])
 
     int i;
     pthread_t philosophers[PHIL];
-    sem_init(&state, 0, 1);
 
     for (i = 0; i < PHIL; i++)
     {
@@ -66,4 +58,6 @@ int main(int argc, char *argv[])
     {
         sem_destroy(&forks[i]); // Destroy every semaphore (fork)
     }
+
+    return 0;
 }
