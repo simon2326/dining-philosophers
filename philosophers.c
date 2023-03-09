@@ -11,22 +11,20 @@ sem_t forks[PHIL]; // Forks
 void *dining_philosopher(void *args)
 {
     int i = *(int *)args;
-
     while (1)
     {
-        printf("Philosopher [%d] thinks...\n", i);
+        printf("Philosopher [%d] thinks...\n", i + 1);
         sleep(3);
-
-        printf("Philosopher [%d] is hungry...\n", i);
+        printf("Philosopher [%d] is hungry...\n", i + 1);
         sleep(3);
 
         sem_wait(&forks[RIGHT]);
         sem_wait(&forks[LEFT]);
 
-        printf("Philosopher [%d] took forks {%d, %d}\n", i, RIGHT, LEFT);
-        printf("Philosopher [%d] is eating...\n", i);
+        printf("Philosopher [%d] took forks {%d, %d}\n", i + 1, RIGHT + 1, LEFT + 1);
+        printf("Philosopher [%d] is eating...\n", i + 1);
         sleep(2);
-        printf("Philosopher [%d] left forks {%d, %d}\n", i, RIGHT, LEFT);
+        printf("Philosopher [%d] left forks {%d, %d}\n", i + 1, RIGHT + 1, LEFT + 1);
 
         sem_post(&forks[RIGHT]);
         sem_post(&forks[LEFT]);
@@ -35,7 +33,6 @@ void *dining_philosopher(void *args)
 
 int main(int argc, char *argv[])
 {
-
     int i;
     pthread_t philosophers[PHIL];
 
